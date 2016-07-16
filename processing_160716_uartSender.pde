@@ -49,9 +49,9 @@ void controlEvent(ControlEvent theEvent) {
 }
 
 void serialEvent(Serial myPort) { 
-   String mystr = myPort.readStringUntil('\n');
-   mystr = trim(mystr);
-   println(mystr);
+   //String mystr = myPort.readStringUntil('\n');
+   //mystr = trim(mystr);
+   //println(mystr);
 }
 
 void openPort() {
