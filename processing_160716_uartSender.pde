@@ -24,7 +24,7 @@ void setup() {
   size(500,500);
   frameRate(10);
   slider = new ControlP5(this);
-  slider.addSlider("comOpen")
+  slider.addSlider("COM")
     .setRange(-1, numSerial - 1)
     .setValue(-1)
     .setPosition(50,40)
@@ -40,9 +40,9 @@ void setup() {
 
 void controlEvent(ControlEvent theEvent) {
   if (theEvent.isController()) {
-     if (theEvent.getName() == "comOpen") {
-       if (curSerial != slider.getValue("comOpen")) {
-         curSerial = (int)slider.getValue("comOpen");
+     if (theEvent.getName() == "COM") {
+       if (curSerial != slider.getValue("COM")) {
+         curSerial = (int)slider.getValue("COM");
        }
      }
   }
