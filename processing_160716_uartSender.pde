@@ -1,6 +1,15 @@
 import processing.serial.*;
 import controlP5.*;
 
+/*
+ * v0.1 2016 Jul. 16
+ *   - send text to through COM port
+ *   - add sendTestString() to send interval
+ *   - add 1 second interval in draw()
+ *   - add button to open COM port
+ *   - add slider for COM port setting
+ */
+
 Serial myPort;
 
 ControlP5 slider;
