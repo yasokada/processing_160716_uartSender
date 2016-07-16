@@ -3,7 +3,7 @@ import controlP5.*;
 
 /*
  * v0.1 2016 Jul. 16
- *   - send text to through COM port
+ *   - send text through COM port
  *   - add sendTestString() to send interval
  *   - add 1 second interval in draw()
  *   - add button to open COM port
@@ -14,8 +14,9 @@ Serial myPort;
 
 ControlP5 slider;
 int sliderValue;
-int numSerial = 5;
+final int numSerial = 5;
 int curSerial = -1;
+int previousSecond = -1;
 
 ControlP5 btnOpen;
 
@@ -74,17 +75,15 @@ void sendTestString()
   }
 }
 
-
-int preSec = -1;
 void draw() {
   background(0);  
 
   // for 1 second interval
   int curSec = second();
-  if (curSec == preSec) {
+  if (curSec == previousSecond) {
     return;
   }
-  preSec = curSec;
+  previousSecond = curSec;
  
   //
   sendTestString();
