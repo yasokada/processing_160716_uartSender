@@ -1,7 +1,12 @@
 import processing.serial.*;
 import controlP5.*;
+import java.util.*;
 
 /*
+ * v0.3 2016 Jul. 19
+ *   - add ScrollableList for COM port selection
+ *   - remove COM button
+ *   - remove slider
  * v0.2 2016 Jul. 17
  *   - add getIntervaledValue()
  * v0.1 2016 Jul. 16
@@ -14,7 +19,7 @@ import controlP5.*;
 
 Serial myPort;
 
-ControlP5 slider;
+ControlP5 comList;
 int sliderValue;
 final int numSerial = 5;
 int curSerial = -1;
@@ -26,29 +31,31 @@ ControlP5 btnOpen;
 void setup() {
   size(500,500);
   frameRate(10);
-  slider = new ControlP5(this);
-  slider.addSlider("COM")
-    .setRange(-1, numSerial - 1)
-    .setValue(-1)
-    .setPosition(50,40)
-    .setSize(200, 20)
-    .setNumberOfTickMarks(numSerial + 1);
-
-  btnOpen = new ControlP5(this);
-  btnOpen.addButton("openPort")
-    .setLabel("Open")
-    .setPosition(275, 40)
-    .setSize(100, 30);    
+  
+  comList = new ControlP5(this);
+  List lst = Arrays.asList(Serial.list());
+  
+  comList.addScrollableList("dropdownCOM")
+     .setPosition(100, 100)
+     .setSize(200, 100)
+     .setBarHeight(20)
+     .setItemHeight(20)
+     .addItems(Serial.list());     
 }
 
 void controlEvent(ControlEvent theEvent) {
-  if (theEvent.isController()) {
-     if (theEvent.getName() == "COM") {
-       if (curSerial != slider.getValue("COM")) {
-         curSerial = (int)slider.getValue("COM");
-       }
-     }
+}
+
+void dropdownCOM(int n)
+{
+  println(n);
+  curSerial = n;
+  if (myPort != null) {
+     myPort.stop(); 
+     myPort = null;
   }
+  myPort = new Serial(this, Serial.list()[curSerial], 9600);
+  myPort.bufferUntil('\n');  
 }
 
 void serialEvent(Serial myPort) { 
@@ -57,14 +64,14 @@ void serialEvent(Serial myPort) {
    //println(mystr);
 }
 
-void openPort() {
-   println("Open Port"); 
-   if (myPort != null) {
-      myPort.stop(); 
-   }
-   myPort = new Serial(this, Serial.list()[(int)curSerial], 9600);
-   myPort.bufferUntil('\n');
- }
+//void openPort() {
+//   println("Open Port"); 
+//   if (myPort != null) {
+//      myPort.stop(); 
+//   }
+//   myPort = new Serial(this, Serial.list()[(int)curSerial], 9600);
+//   myPort.bufferUntil('\n');
+// }
 
 float getIntervaledValue(float amplitude, int elapsed_sec)
 {
