@@ -3,7 +3,8 @@ import controlP5.*;
 import java.util.*;
 
 /*
- * v0.4 2016 Jul. 21
+ * v0.4 2016 Jul. 22
+ *   - comment out index serial tx
  *   - add slider to change interval second
  *   - add slider to change amplitude of the data
  *     + modify sendTestString() to use the amplitude
@@ -156,9 +157,11 @@ void sendTestString()
       , getIntervaledValue(amplitude3, elapsed_sec) 
       , getIntervaledValue(amplitude4, elapsed_sec) 
       );
-    ret = str(elapsed_sec);
-    ret = ret + "  " + wrkstr;
-//    ret = wrkstr;
+      
+    //ret = str(elapsed_sec);
+    //ret = ret + "  " + wrkstr;
+    ret = wrkstr;
+
     ret = ret + "\r\n";
 //    ret = ret + ",3.14, 2.71, 6.022, 1023\r\n";
 //    println(ret);
