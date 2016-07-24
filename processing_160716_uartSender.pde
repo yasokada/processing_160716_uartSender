@@ -3,6 +3,9 @@ import controlP5.*;
 import java.util.*;
 
 /*
+ * v0.5 2016 Jul. 25
+ *   - add checkbox to turn ON/OFF the output of items
+ *   - refactor for array usage
  * v0.4 2016 Jul. 22
  *   - comment out index serial tx
  *   - add slider to change interval second
@@ -30,6 +33,8 @@ int sliderValue;
 final int numSerial = 5;
 int curSerial = -1;
 int previousSecond = -1;
+
+CheckBox checkbox;
 
 final String kAmplitudeName1 = "amplitude1";
 final String kAmplitudeName2 = "amplitude2";
@@ -75,6 +80,19 @@ void intervalUI_setup() {
       ;    
 }
 
+void turnOnOffUI_setup() {
+  checkbox = cp5.addCheckBox("checkBox")
+    .setPosition(100, 220)
+    .setSize(20, 20)
+    .setItemsPerRow(4)
+    .setSpacingColumn(50)
+    .addItem("ITEM0", 0)
+    .addItem("ITEM1", 1)
+    .addItem("ITEM2", 2)
+    .addItem("ITEM3", 3) 
+    ;
+}
+
 void setup() {
   size(500,500);
   frameRate(10);
@@ -83,6 +101,7 @@ void setup() {
   
   amplitudeUI_setup();
   intervalUI_setup();
+  turnOnOffUI_setup();
 
   List lst = Arrays.asList(Serial.list());
   
@@ -143,20 +162,27 @@ void sendTestString()
   
   int elapsed_sec = millis() / 1000; 
   String wrkstr;
+  final int numItems = 4;
   
   if (curSerial >= 0) {
     String ret = "";
-    float amplitude1 = cp5.getController(kAmplitudeName1).getValue();
-    float amplitude2 = cp5.getController(kAmplitudeName2).getValue();
-    float amplitude3 = cp5.getController(kAmplitudeName3).getValue();
-    float amplitude4 = cp5.getController(kAmplitudeName4).getValue();
-    
-    wrkstr = String.format("%.2f  %.2f  %.2f  %.2f" 
-      , getIntervaledValue(amplitude1, elapsed_sec) 
-      , getIntervaledValue(amplitude2, elapsed_sec) 
-      , getIntervaledValue(amplitude3, elapsed_sec) 
-      , getIntervaledValue(amplitude4, elapsed_sec) 
-      );
+    float[] amplitude = new float[numItems];
+    amplitude[0] = cp5.getController(kAmplitudeName1).getValue();
+    amplitude[1] = cp5.getController(kAmplitudeName2).getValue();
+    amplitude[2] = cp5.getController(kAmplitudeName3).getValue();
+    amplitude[3] = cp5.getController(kAmplitudeName4).getValue();
+
+    wrkstr = "";
+    for(int idx=0; idx<numItems; idx++) {
+      int ckd = (int)checkbox.getArrayValue()[idx];
+      if (ckd == 0) {
+        continue;
+      }
+      if (wrkstr.length() > 0) {
+        wrkstr = wrkstr + "  ";
+      }
+      wrkstr = wrkstr + String.format("%.2f", getIntervaledValue(amplitude[idx], elapsed_sec) );
+    }
       
     //ret = str(elapsed_sec);
     //ret = ret + "  " + wrkstr;
